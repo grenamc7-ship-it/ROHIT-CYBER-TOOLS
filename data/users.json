@@ -1,0 +1,46 @@
+[
+  {
+    "username": "rohit",
+    "password": "09876",
+    "name": "Rohit bhai",
+    "role": "user",
+    "status": "active",
+    "validity": "Lifetime",
+    "notes": "Created on 06/09/2026",
+    "createdAt": "2026-09-06T10:49:17.603Z",
+    "lastLogin": "2026-09-06T10:54:07.681Z"
+  },
+  {
+    "username": "client99",
+    "password": "secret99",
+    "name": "Rajesh Kumar",
+    "role": "user",
+    "status": "active",
+    "validity": "30 Days",
+    "notes": "Telegram Buyer",
+    "createdAt": "2026-09-06T10:30:16.412Z",
+    "lastLogin": "2026-09-06T10:30:21.195Z"
+  },
+  {
+    "username": "rohitbhai",
+    "password": "admin123",
+    "name": "Rohit Bhai (Admin)",
+    "role": "admin",
+    "status": "active",
+    "validity": "Lifetime",
+    "notes": "Master Admin Account",
+    "createdAt": "2026-09-06T10:30:05.801Z",
+    "lastLogin": "2026-09-06T10:57:07.919Z"
+  },
+  {
+    "username": "vipuser",
+    "password": "pass123",
+    "name": "VIP Premium User",
+    "role": "user",
+    "status": "active",
+    "validity": "30 Days",
+    "notes": "Default VIP Client Account",
+    "createdAt": "2026-09-06T10:30:05.801Z",
+    "lastLogin": null
+  }
+]

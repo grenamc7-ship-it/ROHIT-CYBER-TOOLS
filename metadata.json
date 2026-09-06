@@ -1,0 +1,6 @@
+{
+  "name": "ROHIT { CYBER TOOLS }",
+  "description": "ROHIT { CYBER TOOLS } - Official cyber security portal featuring Number info, Advance Number trace, Aadhar lookup, Advance Aadhar intelligence, Vehicle to Owner number, Vehicle RC, Email info, Instagram profile analytics, Truecaller intelligence, Weather reports, and Admin Modz OSINT cross-telecom citizen search.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROHIT { CYBER TOOLS } - Master Admin Console</title>
+  <meta name="description" content="ROHIT { CYBER TOOLS } - Master Admin Management Console for User Passwords and Access." />
+
+  <!-- Google Fonts: Plus Jakarta Sans, Space Grotesk & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-dark: #030712;
+      --glass-bg: rgba(13, 22, 41, 0.55);
+      --glass-bg-hover: rgba(18, 30, 56, 0.7);
+      --glass-bg-input: rgba(4, 9, 20, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-hover: rgba(6, 182, 212, 0.45);
+      --glass-border-top: rgba(255, 255, 255, 0.25);
+
+      --neon-emerald: #10b981;
+      --neon-cyan: #06b6d4;
+      --neon-purple: #a855f7;
+      --neon-amber: #f59e0b;
+      --neon-red: #ef4444;
+
+      --text-white: #ffffff;
+      --text-bright: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-bright);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    /* Ambient background */
+    .ambient-canvas-wrap {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .luminous-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(95px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .orb-cyan {
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+      top: -100px;
+      left: 5%;
+    }
+
+    .orb-purple {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+      bottom: -100px;
+      right: 5%;
+    }
+
+    .subtle-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* Glass card component */
+    .liquid-glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid var(--glass-border);
+      border-top: 1px solid var(--glass-border-top);
+      border-radius: 20px;
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 0 35px rgba(6, 182, 212, 0.06);
+    }
+
+    /* TOP NAVBAR */
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 0 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 32px;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: #030712;
+      box-shadow: 0 8px 20px rgba(168, 85, 247, 0.35);
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--neon-purple);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav-link {
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      color: var(--neon-cyan);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-nav-link:hover {
+      background: rgba(6, 182, 212, 0.25);
+      color: #ffffff;
+    }
+
+    .btn-lock {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-lock:hover {
+      background: rgba(239, 68, 68, 0.25);
+      color: #ffffff;
+    }
+
+    /* ADMIN GATE FORM (NO HINT BOX SHOWN) */
+    .admin-gate-card {
+      max-width: 440px;
+      margin: 60px auto;
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .gate-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      border-radius: 20px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.25);
+    }
+
+    .gate-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .gate-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .alert-banner {
+      display: none;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .glass-input {
+      width: 100%;
+      background: var(--glass-bg-input);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 13px 16px;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.25s;
+    }
+
+    .glass-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+    }
+
+    .glass-btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #059669 0%, #06b6d4 50%, #8b5cf6 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.35);
+      transition: all 0.2s;
+    }
+
+    .glass-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(6, 182, 212, 0.55);
+    }
+
+    /* DASHBOARD CONTENT */
+    .admin-content {
+      display: none;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      padding: 20px 22px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #ffffff;
+    }
+
+    .stat-value.cyan { color: var(--neon-cyan); }
+    .stat-value.green { color: var(--neon-emerald); }
+    .stat-value.purple { color: var(--neon-purple); }
+
+    /* TWO-PANEL GRID */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+
+    @media (max-width: 880px) {
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+
+    .card-panel {
+      padding: 28px;
+    }
+
+    .card-header-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .input-with-action {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      color: #d8b4fe;
+      padding: 0 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(168, 85, 247, 0.3);
+      color: #ffffff;
+    }
+
+    .share-preview-box {
+      background: rgba(3, 7, 18, 0.85);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #34d399;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 16px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .btn-whatsapp {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-whatsapp:hover {
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.55);
+      transform: translateY(-1px);
+    }
+
+    /* DIRECTORY TABLE */
+    .users-section {
+      padding: 28px;
+    }
+
+    .users-search-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .search-mini {
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .users-table-wrap {
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+    }
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .users-table th {
+      background: rgba(10, 19, 42, 0.85);
+      padding: 13px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .users-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+
+    .users-table tr:hover td {
+      background: rgba(6, 182, 212, 0.04);
+      color: #ffffff;
+    }
+
+    .user-name-bold {
+      font-weight: 700;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .pass-masked {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--neon-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      padding: 4px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .badge-status.active {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    .badge-status.inactive {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .action-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon-action {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-bright);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-icon-action:hover {
+      background: rgba(6, 182, 212, 0.2);
+      color: var(--neon-cyan);
+    }
+
+    .btn-icon-action.delete:hover {
+      background: rgba(239, 68, 68, 0.25);
+      color: #ef4444;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(10, 20, 42, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--neon-emerald);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.35);
+      padding: 12px 20px;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 1000;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Canvas -->
+  <div class="ambient-canvas-wrap" aria-hidden="true">
+    <div class="subtle-grid-overlay"></div>
+    <div class="luminous-orb orb-cyan"></div>
+    <div class="luminous-orb orb-purple"></div>
+  </div>
+
+  <div class="wrapper">
+    <!-- TOP NAVBAR -->
+    <header class="admin-nav">
+      <div class="brand-box">
+        <div class="brand-badge">{R}</div>
+        <div>
+          <div class="brand-title">ROHIT { CYBER TOOLS }</div>
+          <div class="brand-subtitle">MASTER ADMIN CONSOLE</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a href="/" class="btn-nav-link">
+          <span>🚀 OPEN SEARCH TERMINAL</span>
+        </a>
+        <button type="button" class="btn-lock" id="btn-logout-admin" onclick="logoutAdmin()">
+          <span>🔒 LOCK CONSOLE</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ADMIN GATE (SECRET PASSCODE ENTRY - NO HINTS) -->
+    <section class="admin-gate-card liquid-glass-card" id="admin-gate">
+      <div class="gate-icon">🔐</div>
+      <h2 class="gate-title">ADMINISTRATOR ACCESS</h2>
+      <p class="gate-desc">Enter Rohit Bhai Master Admin Secret Key to manage client logins and passwords.</p>
+
+      <div class="alert-banner" id="gate-alert">Invalid Master Secret Key</div>
+
+      <form onsubmit="return handleAdminLogin(event)">
+        <div class="input-group">
+          <label class="input-label" for="admin-secret-input">MASTER ADMIN SECRET</label>
+          <input 
+            type="password" 
+            id="admin-secret-input" 
+            class="glass-input" 
+            placeholder="Enter Master Secret Key..." 
+            autocomplete="current-password" 
+            required 
+          />
+        </div>
+
+        <button type="submit" class="glass-btn-primary" id="btn-unlock-gate">
+          ✦ UNLOCK ADMIN CONSOLE ✦
+        </button>
+      </form>
+    </section>
+
+    <!-- ADMIN DASHBOARD MAIN CONTENT -->
+    <main class="admin-content" id="admin-main">
+      <!-- STATS ROW -->
+      <section class="stats-row">
+        <div class="stat-card liquid-glass-card">
+          <div class="stat-label">TOTAL ACCOUNTS</div>
+          <div class="stat-value cyan" id="stat-total-users">0</div>
+        </div>
+        <div class="stat-card liquid-glass-card">
+          <div class="stat-label">ACTIVE CLIENTS</div>
+          <div class="stat-value green" id="stat-active-users">0</div>
+        </div>
+        <div class="stat-card liquid-glass-card">
+          <div class="stat-label">SUSPENDED USERS</div>
+          <div class="stat-value" id="stat-suspended-users">0</div>
+        </div>
+        <div class="stat-card liquid-glass-card">
+          <div class="stat-label">TOTAL SEARCHES</div>
+          <div class="stat-value purple" id="stat-total-searches">0</div>
+        </div>
+      </section>
+
+      <!-- TWO-PANEL GRID: CREATE USER & WHATSAPP EXPORTER -->
+      <section class="admin-grid">
+        <!-- USER CREATION CARD -->
+        <div class="card-panel liquid-glass-card">
+          <h3 class="card-header-title">
+            <span>⚡</span>
+            <span>CREATE CLIENT USER & PASSWORD</span>
+          </h3>
+
+          <form id="create-user-form" onsubmit="return handleCreateUser(event)">
+            <div class="form-row">
+              <div class="input-group">
+                <label class="input-label" for="new-username">USERNAME (UNIQUE)</label>
+                <input 
+                  type="text" 
+                  id="new-username" 
+                  class="glass-input" 
+                  placeholder="e.g. rohitvip1" 
+                  required 
+                />
+              </div>
+
+              <div class="input-group">
+                <label class="input-label" for="new-password">PASSWORD / PIN</label>
+                <div class="input-with-action">
+                  <input 
+                    type="text" 
+                    id="new-password" 
+                    class="glass-input" 
+                    placeholder="e.g. 78921" 
+                    required 
+                  />
+                  <button type="button" class="btn-secondary" onclick="generateRandomPass()" title="Generate Random PIN">
+                    🎲 PIN
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="input-group">
+                <label class="input-label" for="new-client-name">CLIENT NAME / NOTE</label>
+                <input 
+                  type="text" 
+                  id="new-client-name" 
+                  class="glass-input" 
+                  placeholder="e.g. Amit Sharma (Telegram)" 
+                />
+              </div>
+
+              <div class="input-group">
+                <label class="input-label" for="new-validity">ACCESS VALIDITY</label>
+                <select id="new-validity" class="glass-input">
+                  <option value="24 Hours">24 Hours Trial</option>
+                  <option value="7 Days">7 Days Access</option>
+                  <option value="30 Days" selected>30 Days (1 Month)</option>
+                  <option value="3 Months">3 Months VIP</option>
+                  <option value="1 Year">1 Year Access</option>
+                  <option value="Lifetime">Lifetime Unlimited</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="glass-btn-primary" id="btn-create-submit" style="margin-top: 10px;">
+              + CREATE USER & GRANT ACCESS
+            </button>
+          </form>
+        </div>
+
+        <!-- READY-TO-SHARE WHATSAPP MESSAGE GENERATOR -->
+        <div class="card-panel liquid-glass-card">
+          <h3 class="card-header-title">
+            <span>📋</span>
+            <span>ONE-CLICK CLIENT CREDENTIALS SHARE</span>
+          </h3>
+
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+            Copy this formatted message and send directly to your client on WhatsApp or Telegram:
+          </p>
+
+          <div class="share-preview-box" id="share-box">
+🔥 *ROHIT { CYBER TOOLS } - VIP ACCESS* 🔥
+━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 *Username:* client_username
+🔑 *Password:* client_password
+⏳ *Validity:* 30 Days Access
+🌐 *Portal Link:* https://...
+━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ *Available Tools:*
+🚗 Vehicle Info Tool (Live RC / RTO Data)
+📱 Number Info Tool (Live Phone DB)
+🪪 Aadhar Info Tool (UIDAI Details)
+⛅ Weather Info Tool (Atmosphere & Forecast)
+━━━━━━━━━━━━━━━━━━━━━━━━━
+👑 Developer: @NVR_ROHIT_BHAI
+📞 WhatsApp: +91 6289106267
+          </div>
+
+          <button type="button" class="btn-whatsapp" onclick="copyShareText()">
+            <span>💬 COPY MESSAGE FOR WHATSAPP</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ACTIVE USERS DIRECTORY TABLE -->
+      <section class="users-section liquid-glass-card">
+        <div class="users-search-bar">
+          <h3 class="card-header-title" style="margin-bottom: 0; border: none; padding: 0;">
+            <span>👥</span>
+            <span>REGISTERED USERS DIRECTORY</span>
+          </h3>
+
+          <div class="search-mini">
+            <input 
+              type="text" 
+              id="users-filter-input" 
+              class="glass-input" 
+              placeholder="Search user or name..." 
+              oninput="filterUsersTable()" 
+            />
+          </div>
+        </div>
+
+        <div class="users-table-wrap">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>USERNAME</th>
+                <th>PASSWORD</th>
+                <th>CLIENT NAME</th>
+                <th>VALIDITY</th>
+                <th>STATUS</th>
+                <th>CREATED</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast-msg">Copied to clipboard!</div>
+
+  <script>
+    let currentAdminSecret = sessionStorage.getItem('rohit_admin_secret') || '';
+    let loadedUsersList = [];
+
+    // DOM Elements
+    const adminGate = document.getElementById('admin-gate');
+    const adminMain = document.getElementById('admin-main');
+    const gateAlert = document.getElementById('gate-alert');
+    const adminSecretInput = document.getElementById('admin-secret-input');
+    const shareBox = document.getElementById('share-box');
+    const usersTableBody = document.getElementById('users-table-body');
+    const toastMsg = document.getElementById('toast-msg');
+
+    // Stats elements
+    const statTotalUsers = document.getElementById('stat-total-users');
+    const statActiveUsers = document.getElementById('stat-active-users');
+    const statSuspendedUsers = document.getElementById('stat-suspended-users');
+    const statTotalSearches = document.getElementById('stat-total-searches');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (currentAdminSecret) {
+        verifyAndOpenAdmin(currentAdminSecret);
+      }
+    });
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const secret = adminSecretInput.value.trim();
+      if (!secret) return false;
+
+      gateAlert.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/auth/verify-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminSecret: secret })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          currentAdminSecret = secret;
+          sessionStorage.setItem('rohit_admin_secret', secret);
+          adminGate.style.display = 'none';
+          adminMain.style.display = 'block';
+          loadAdminData();
+        } else {
+          gateAlert.textContent = data.error || 'Invalid Master Secret Key';
+          gateAlert.style.display = 'block';
+        }
+      } catch (err) {
+        gateAlert.textContent = 'Server connection error';
+        gateAlert.style.display = 'block';
+      }
+
+      return false;
+    }
+
+    async function verifyAndOpenAdmin(secret) {
+      try {
+        const res = await fetch('/api/auth/verify-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminSecret: secret })
+        });
+        const data = await res.json();
+        if (data.success) {
+          adminGate.style.display = 'none';
+          adminMain.style.display = 'block';
+          loadAdminData();
+        } else {
+          sessionStorage.removeItem('rohit_admin_secret');
+          adminGate.style.display = 'block';
+          adminMain.style.display = 'none';
+        }
+      } catch (err) {
+        adminGate.style.display = 'block';
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('rohit_admin_secret');
+      currentAdminSecret = '';
+      adminMain.style.display = 'none';
+      adminGate.style.display = 'block';
+      adminSecretInput.value = '';
+      showToast('Admin console locked.');
+    }
+
+    async function loadAdminData() {
+      if (!currentAdminSecret) return;
+
+      try {
+        const usersRes = await fetch(`/api/admin/users?adminSecret=${encodeURIComponent(currentAdminSecret)}`);
+        const usersData = await usersRes.json();
+
+        if (usersData.success && Array.isArray(usersData.users)) {
+          loadedUsersList = usersData.users;
+          renderUsersTable(loadedUsersList);
+        }
+
+        const statsRes = await fetch(`/api/admin/stats?adminSecret=${encodeURIComponent(currentAdminSecret)}`);
+        const statsData = await statsRes.json();
+
+        if (statsData.success) {
+          statTotalUsers.textContent = statsData.totalUsers;
+          statActiveUsers.textContent = statsData.activeUsers;
+          statSuspendedUsers.textContent = statsData.suspendedUsers;
+          statTotalSearches.textContent = statsData.totalSearches;
+        }
+
+      } catch (err) {
+        showToast('Error refreshing admin data');
+      }
+    }
+
+    function generateRandomPass() {
+      const pin = Math.floor(100000 + Math.random() * 900000).toString();
+      document.getElementById('new-password').value = pin;
+    }
+
+    async function handleCreateUser(e) {
+      e.preventDefault();
+      const username = document.getElementById('new-username').value.trim();
+      const password = document.getElementById('new-password').value.trim();
+      const name = document.getElementById('new-client-name').value.trim();
+      const validity = document.getElementById('new-validity').value;
+
+      if (!username || !password) {
+        showToast('Username and password are required');
+        return false;
+      }
+
+      const btn = document.getElementById('btn-create-submit');
+      btn.disabled = true;
+      btn.textContent = 'CREATING...';
+
+      try {
+        const res = await fetch('/api/admin/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-secret': currentAdminSecret
+          },
+          body: JSON.stringify({
+            username,
+            password,
+            name,
+            validity,
+            notes: `Created on ${new Date().toLocaleDateString()}`
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          showToast(`User ${username} created!`);
+          updateShareBox(username, password, validity, name);
+          document.getElementById('create-user-form').reset();
+          loadAdminData();
+        } else {
+          showToast(`Error: ${data.error || 'Failed to create user'}`);
+        }
+      } catch (err) {
+        showToast('Server connection failed');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '+ CREATE USER & GRANT ACCESS';
+      }
+
+      return false;
+    }
+
+    function updateShareBox(u, p, v, name = '') {
+      const portalUrl = window.location.origin;
+      const text = `🔥 *ROHIT { CYBER TOOLS } - VIP ACCESS* 🔥
+━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 *Username:* ${u}
+🔑 *Password:* ${p}
+⏳ *Validity:* ${v}
+🌐 *Portal Link:* ${portalUrl}
+━━━━━━━━━━━━━━━━━━━━━━━━━
+🛠️ *AVAILABLE CYBER TOOLS:*
+🚗 Vehicle Info Tool (Live RC / RTO Data)
+📱 Number Info Tool (Live Phone DB)
+🪪 Aadhar Info Tool (UIDAI Details)
+⛅ Weather Info Tool (Atmosphere & 7-Day Forecast)
+━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ *How To Use:*
+1. Click the portal link above.
+2. Enter your username & password to decrypt.
+3. Select any tool and query live database!
+━━━━━━━━━━━━━━━━━━━━━━━━━
+👑 Developer: @NVR_ROHIT_BHAI
+📞 WhatsApp / Call: +91 6289106267
+✉️ Email: rohitrs3944@gmail.com`;
+
+      shareBox.textContent = text;
+    }
+
+    function renderUsersTable(users) {
+      usersTableBody.innerHTML = '';
+
+      if (users.length === 0) {
+        usersTableBody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-dim);">
+              No users registered yet. Create a user above.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+        const isActive = u.status === 'active';
+        const formattedDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A';
+
+        tr.innerHTML = `
+          <td><span class="user-name-bold">${escapeHtml(u.username)}</span></td>
+          <td>
+            <span class="pass-masked">
+              <span>${escapeHtml(u.password)}</span>
+              <button type="button" onclick="copyText('${escapeHtml(u.password)}')" style="background:none;border:none;color:inherit;cursor:pointer;" title="Copy Password">📋</button>
+            </span>
+          </td>
+          <td>${escapeHtml(u.name || '-')}</td>
+          <td><span style="font-family:'JetBrains Mono',monospace;color:var(--neon-purple);">${escapeHtml(u.validity || 'Standard')}</span></td>
+          <td>
+            <span class="badge-status ${isActive ? 'active' : 'inactive'}">
+              <span>●</span> ${isActive ? 'ACTIVE' : 'SUSPENDED'}
+            </span>
+          </td>
+          <td><span style="font-size:11.5px;color:var(--text-dim);">${formattedDate}</span></td>
+          <td>
+            <div class="action-icons">
+              <button class="btn-icon-action" onclick="toggleUserStatus('${escapeHtml(u.username)}', '${isActive ? 'inactive' : 'active'}')" title="${isActive ? 'Suspend User' : 'Activate User'}">
+                ${isActive ? '⏸' : '▶'}
+              </button>
+              <button class="btn-icon-action" onclick="loadUserToShare('${escapeHtml(u.username)}', '${escapeHtml(u.password)}', '${escapeHtml(u.validity)}')" title="Generate WhatsApp Share Message">
+                💬
+              </button>
+              <button class="btn-icon-action delete" onclick="deleteUser('${escapeHtml(u.username)}')" title="Delete User">
+                🗑
+              </button>
+            </div>
+          </td>
+        `;
+
+        usersTableBody.appendChild(tr);
+      });
+    }
+
+    async function toggleUserStatus(username, newStatus) {
+      try {
+        const res = await fetch(`/api/admin/users/${encodeURIComponent(username)}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-secret': currentAdminSecret
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(`User ${username} is now ${newStatus}`);
+          loadAdminData();
+        } else {
+          showToast(`Error: ${data.error}`);
+        }
+      } catch (e) {
+        showToast('Failed to update status');
+      }
+    }
+
+    async function deleteUser(username) {
+      if (!confirm(`Are you sure you want to permanently delete user "${username}"?`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/admin/users/${encodeURIComponent(username)}`, {
+          method: 'DELETE',
+          headers: {
+            'x-admin-secret': currentAdminSecret
+          }
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(`User ${username} deleted`);
+          loadAdminData();
+        } else {
+          showToast(`Error: ${data.error}`);
+        }
+      } catch (e) {
+        showToast('Failed to delete user');
+      }
+    }
+
+    function loadUserToShare(u, p, v) {
+      updateShareBox(u, p, v);
+      shareBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      showToast('Formatted for WhatsApp share!');
+    }
+
+    function filterUsersTable() {
+      const q = document.getElementById('users-filter-input').value.toLowerCase().trim();
+      if (!q) {
+        renderUsersTable(loadedUsersList);
+        return;
+      }
+
+      const filtered = loadedUsersList.filter(u => 
+        u.username.toLowerCase().includes(q) || 
+        (u.name && u.name.toLowerCase().includes(q))
+      );
+      renderUsersTable(filtered);
+    }
+
+    function copyText(txt) {
+      navigator.clipboard.writeText(txt);
+      showToast('Copied to clipboard!');
+    }
+
+    function copyShareText() {
+      const txt = shareBox.textContent;
+      navigator.clipboard.writeText(txt);
+      showToast('WhatsApp message copied! Paste in WhatsApp/Telegram.');
+    }
+
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toastMsg.style.display = 'block';
+      setTimeout(() => {
+        toastMsg.style.display = 'none';
+      }, 2500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+    }
+  </script>
+</body>
+</html>

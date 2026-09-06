@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROHIT { KEY MASTER } - Universal Cloud License & UserPass Manager</title>
+  <meta name="description" content="Standalone Firebase-connected License Key & User/Pass Manager by ROHIT { CYBER TOOLS }. Generate, Pause, Stop, Delete, and Control keys remotely from any hosting." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-deep: #020617;
+      --bg-card: rgba(8, 15, 36, 0.85);
+      --border-cyan: rgba(0, 240, 255, 0.25);
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff007f;
+      --neon-emerald: #10b981;
+      --neon-amber: #f59e0b;
+      --neon-rose: #ef4444;
+      --neon-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(255, 0, 127, 0.07) 0%, transparent 40%),
+        linear-gradient(rgba(2, 6, 23, 0.95), rgba(2, 6, 23, 0.95));
+      background-attachment: fixed;
+    }
+
+    /* TOP NAVBAR */
+    .top-navbar {
+      background: rgba(3, 8, 26, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-cyan);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-nav-primary {
+      background: var(--neon-cyan);
+      color: #020617;
+      border: 1px solid var(--neon-cyan);
+      font-weight: 800;
+    }
+
+    .btn-nav-primary:hover {
+      background: #38f9d7;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+      color: #020617;
+    }
+
+    /* MAIN CONTAINER */
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 28px 20px 80px 20px;
+    }
+
+    /* STATS HEADER */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .stat-card.total::before { background: var(--neon-cyan); }
+    .stat-card.active::before { background: var(--neon-emerald); }
+    .stat-card.paused::before { background: var(--neon-amber); }
+    .stat-card.revoked::before { background: var(--neon-rose); }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    /* MAIN TWO COLUMN GRID */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 28px;
+    }
+
+    @media (max-width: 1100px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* GENERATOR CARD */
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-cyan);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* TABS */
+    .type-tab-bar {
+      display: flex;
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+
+    .type-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .type-tab-btn.active {
+      background: var(--neon-cyan);
+      color: #020617;
+      font-weight: 800;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+    }
+
+    /* FORM ELEMENTS */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(2, 6, 23, 0.85);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 10px;
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+
+    .input-with-action {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-action-small {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 0 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .btn-action-small:hover {
+      background: var(--neon-cyan);
+      color: #020617;
+    }
+
+    /* PRESET BUTTONS */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .btn-preset {
+      background: rgba(2, 6, 23, 0.85);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 8px;
+      border-radius: 9px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-preset:hover {
+      border-color: var(--neon-cyan);
+      color: #ffffff;
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    .btn-preset.active {
+      background: rgba(0, 240, 255, 0.25);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+    }
+
+    .btn-preset.permanent-active {
+      background: rgba(255, 0, 127, 0.25);
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+      box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
+    }
+
+    .btn-generate-main {
+      width: 100%;
+      background: linear-gradient(135deg, #00f0ff 0%, #00b4d8 100%);
+      color: #020617;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-generate-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.6);
+      background: linear-gradient(135deg, #38f9d7 0%, #00f0ff 100%);
+    }
+
+    /* RIGHT COLUMN: KEYS LIST */
+    .list-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-filter-box {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .filter-pills-bar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .pill-btn {
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--neon-cyan);
+      color: #ffffff;
+    }
+
+    .pill-btn.active {
+      background: rgba(0, 240, 255, 0.2);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+    }
+
+    /* KEY CARD ITEM */
+    .keys-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 750px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .keys-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .keys-container::-webkit-scrollbar-thumb {
+      background: rgba(0, 240, 255, 0.3);
+      border-radius: 4px;
+    }
+
+    .key-card {
+      background: rgba(3, 8, 26, 0.9);
+      border: 1.5px solid rgba(0, 240, 255, 0.2);
+      border-radius: 14px;
+      padding: 16px 18px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .key-card:hover {
+      border-color: rgba(0, 240, 255, 0.5);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .key-card.status-active {
+      border-left: 5px solid var(--neon-emerald);
+    }
+
+    .key-card.status-paused {
+      border-left: 5px solid var(--neon-amber);
+      opacity: 0.9;
+    }
+
+    .key-card.status-stopped {
+      border-left: 5px solid var(--neon-rose);
+      opacity: 0.75;
+    }
+
+    .key-card.status-expired {
+      border-left: 5px solid #64748b;
+      opacity: 0.65;
+    }
+
+    .key-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .key-string-badge {
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      user-select: all;
+    }
+
+    .key-status-tag {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tag-active {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--neon-emerald);
+      color: var(--neon-emerald);
+    }
+
+    .tag-paused {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--neon-amber);
+      color: var(--neon-amber);
+    }
+
+    .tag-stopped {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--neon-rose);
+      color: var(--neon-rose);
+    }
+
+    .tag-expired {
+      background: rgba(100, 116, 139, 0.2);
+      border: 1px solid #64748b;
+      color: #94a3b8;
+    }
+
+    .key-meta-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .meta-val {
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .countdown-timer {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--neon-cyan);
+    }
+
+    /* ACTION BUTTONS ON KEY CARD */
+    .key-actions-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-key-ctrl {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-key-ctrl:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-ctrl-pause {
+      border-color: rgba(245, 158, 11, 0.4);
+      color: var(--neon-amber);
+    }
+    .btn-ctrl-pause:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-ctrl-resume {
+      border-color: rgba(16, 185, 129, 0.4);
+      color: var(--neon-emerald);
+    }
+    .btn-ctrl-resume:hover {
+      background: rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-ctrl-stop {
+      border-color: rgba(239, 68, 68, 0.4);
+      color: var(--neon-rose);
+    }
+    .btn-ctrl-stop:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-ctrl-extend {
+      border-color: rgba(0, 240, 255, 0.4);
+      color: var(--neon-cyan);
+    }
+    .btn-ctrl-extend:hover {
+      background: rgba(0, 240, 255, 0.2);
+    }
+
+    .btn-ctrl-delete {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #94a3b8;
+      margin-left: auto;
+    }
+    .btn-ctrl-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: var(--neon-rose);
+      color: #ffffff;
+    }
+
+    /* EMPTY STATE */
+    .empty-keys-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      border: 1.5px dashed rgba(0, 240, 255, 0.2);
+      border-radius: 16px;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: #030a1c;
+      border: 1.5px solid var(--neon-cyan);
+      border-radius: 18px;
+      padding: 26px;
+      max-width: 650px;
+      width: 100%;
+      box-shadow: 0 0 50px rgba(0, 240, 255, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .btn-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .code-block {
+      background: rgba(1, 4, 14, 0.95);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 10px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #00f0ff;
+      overflow-x: auto;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast-popup {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(3, 8, 26, 0.95);
+      border: 1px solid var(--neon-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 9999;
+      transform: translateY(150%);
+      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toast-popup.show {
+      transform: translateY(0);
+    }
+  </style>
+
+  <!-- FIREBASE WEB SDK (MODULAR) VIA CDN -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      setDoc, 
+      updateDoc, 
+      deleteDoc, 
+      onSnapshot,
+      query,
+      orderBy,
+      getDoc
+    } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+    // DEFAULT EMBEDDED FIREBASE CONFIG
+    const DEFAULT_CONFIG = {
+      apiKey: "AIzaSyDduI4_pB0Iwy298LdIsu8YRHsCB8sj-wU",
+      authDomain: "gen-lang-client-0119482325.firebaseapp.com",
+      projectId: "gen-lang-client-0119482325",
+      firestoreDatabaseId: "ai-studio-rohitbhaiinforma-6957fd0d-1c3e-4070-bd77-f054dde6cf60",
+      storageBucket: "gen-lang-client-0119482325.firebasestorage.app",
+      messagingSenderId: "408673488788",
+      appId: "1:408673488788:web:26e4f5b25fe57b359e0981"
+    };
+
+    // Allow user to customize config stored in localStorage
+    function getActiveConfig() {
+      const stored = localStorage.getItem('rohit_custom_firebase_config');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      return DEFAULT_CONFIG;
+    }
+
+    const currentConfig = getActiveConfig();
+
+    let app;
+    let db;
+    let unsubscribeFirestore = null;
+
+    try {
+      app = initializeApp(currentConfig);
+      // Initialize with specific firestore database ID
+      db = getFirestore(app, currentConfig.firestoreDatabaseId || "(default)");
+      window.rohitFirebaseDB = db;
+      window.rohitFirestoreDoc = doc;
+      window.rohitFirestoreSetDoc = setDoc;
+      window.rohitFirestoreUpdateDoc = updateDoc;
+      window.rohitFirestoreDeleteDoc = deleteDoc;
+      window.rohitFirestoreCollection = collection;
+      console.log("Firebase initialized successfully with DB:", currentConfig.firestoreDatabaseId);
+    } catch (err) {
+      console.error("Firebase init failed:", err);
+      showToast("Firebase init failed. Check connection or config!");
+    }
+
+    // START REALTIME SYNC
+    window.initRealtimeListener = function() {
+      if (!db) return;
+      const keysCol = collection(db, "license_keys");
+      
+      unsubscribeFirestore = onSnapshot(keysCol, (snapshot) => {
+        const list = [];
+        snapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        // Sort newest first
+        list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        window.allKeysData = list;
+        renderKeysList();
+        updateStats();
+      }, (error) => {
+        console.error("Firestore sync error:", error);
+        showToast("Firestore Error: " + error.message);
+      });
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.initRealtimeListener();
+    });
+  </script>
+</head>
+<body>
+
+  <!-- TOP HUD NAVBAR -->
+  <nav class="top-navbar">
+    <div class="brand-title">
+      <span style="color:var(--neon-cyan);">🔑</span>
+      <span>ROHIT { KEY MASTER }</span>
+      <span class="brand-badge">STANDALONE HOSTING READY</span>
+    </div>
+
+    <div class="nav-actions">
+      <!-- Direct Download of this HTML file -->
+      <button type="button" class="btn-nav btn-nav-primary" onclick="downloadStandaloneHtml()" title="Download this standalone HTML file to host anywhere">
+        <span>💾</span>
+        <span>DOWNLOAD SINGLE HTML</span>
+      </button>
+
+      <!-- Client API integration code -->
+      <button type="button" class="btn-nav" onclick="openApiModal()" title="View API verification code for your tools/scripts">
+        <span>⚡</span>
+        <span>INTEGRATION CODE</span>
+      </button>
+
+      <!-- Firebase Config Modal -->
+      <button type="button" class="btn-nav" onclick="openConfigModal()" title="View or modify Firebase project config">
+        <span>⚙️</span>
+        <span>FIREBASE CONFIG</span>
+      </button>
+
+      <!-- Return to Main Tools Portal -->
+      <a href="/" class="btn-nav" title="Back to Cyber Security Portal">
+        <span>🌐</span>
+        <span>CYBER TOOLS</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <div class="app-container">
+
+    <!-- STATS COUNTER -->
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <div class="stat-label">TOTAL CREDENTIALS</div>
+        <div class="stat-value" id="stat-total">0</div>
+      </div>
+      <div class="stat-card active">
+        <div class="stat-label">ACTIVE / VALID</div>
+        <div class="stat-value" id="stat-active" style="color:var(--neon-emerald);">0</div>
+      </div>
+      <div class="stat-card paused">
+        <div class="stat-label">PAUSED (FROZEN)</div>
+        <div class="stat-value" id="stat-paused" style="color:var(--neon-amber);">0</div>
+      </div>
+      <div class="stat-card revoked">
+        <div class="stat-label">STOPPED / EXPIRED</div>
+        <div class="stat-value" id="stat-revoked" style="color:var(--neon-rose);">0</div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO COLUMN WORKSPACE -->
+    <div class="content-grid">
+
+      <!-- LEFT COLUMN: GENERATOR -->
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>⚡</span>
+          <span>GENERATE NEW CREDENTIAL</span>
+        </div>
+
+        <!-- TYPE SWITCHER -->
+        <div class="type-tab-bar">
+          <button type="button" class="type-tab-btn active" id="tab-key" onclick="switchGenType('key')">
+            <span>🔑 ACCESS KEY (SERIAL)</span>
+          </button>
+          <button type="button" class="type-tab-btn" id="tab-userpass" onclick="switchGenType('user_pass')">
+            <span>👤 USER & PASS</span>
+          </button>
+        </div>
+
+        <!-- FORM: ACCESS KEY -->
+        <div id="form-key-wrap">
+          <div class="form-group">
+            <label class="form-label">SERIAL LICENSE KEY</label>
+            <div class="input-with-action">
+              <input type="text" id="gen-key-val" class="form-input" placeholder="e.g. ROHIT-XXXX-XXXX-XXXX" />
+              <button type="button" class="btn-action-small" onclick="generateRandomKeyString()">AUTO 🎲</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM: USER & PASS -->
+        <div id="form-userpass-wrap" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">USERNAME</label>
+            <div class="input-with-action">
+              <input type="text" id="gen-username-val" class="form-input" placeholder="e.g. rohit_user_912" />
+              <button type="button" class="btn-action-small" onclick="generateRandomUsername()">AUTO 🎲</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">PASSWORD</label>
+            <div class="input-with-action">
+              <input type="text" id="gen-password-val" class="form-input" placeholder="e.g. Rk9#mP2x" />
+              <button type="button" class="btn-action-small" onclick="generateRandomPassword()">AUTO 🎲</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLIENT / REMARK -->
+        <div class="form-group">
+          <label class="form-label">CLIENT NAME / REMARKS</label>
+          <input type="text" id="gen-client-val" class="form-input" placeholder="e.g. Rahul, VIP Client, Telegram @username" />
+        </div>
+
+        <!-- DURATION PRESETS (EXPLICIT USER OPTIONS) -->
+        <div class="form-group">
+          <label class="form-label">VALIDITY DURATION</label>
+          <div class="preset-grid">
+            <button type="button" class="btn-preset" data-secs="3600" data-label="1 Hour" onclick="selectDuration(this, 3600, '1 Hour')">⚡ 1 HOUR</button>
+            <button type="button" class="btn-preset active" data-secs="86400" data-label="1 Day" onclick="selectDuration(this, 86400, '1 Day')">📅 1 DAY</button>
+            <button type="button" class="btn-preset" data-secs="864000" data-label="10 Days" onclick="selectDuration(this, 864000, '10 Days')">🗓️ 10 DAYS</button>
+            <button type="button" class="btn-preset" data-secs="1296000" data-label="15 Days" onclick="selectDuration(this, 1296000, '15 Days')">🗓️ 15 DAYS</button>
+            <button type="button" class="btn-preset" data-secs="2592000" data-label="30 Days" onclick="selectDuration(this, 2592000, '30 Days')">📆 30 DAYS</button>
+            <button type="button" class="btn-preset" data-secs="-1" data-label="Permanent" onclick="selectDuration(this, -1, 'Permanent')">♾️ PERMANENT</button>
+          </div>
+        </div>
+
+        <!-- BATCH GENERATION COUNT -->
+        <div class="form-group" id="batch-wrap">
+          <label class="form-label">QUANTITY (FOR SERIAL KEYS)</label>
+          <select id="gen-batch-count" class="form-input" style="cursor:pointer;">
+            <option value="1">1 Key (Single)</option>
+            <option value="5">5 Keys (Batch)</option>
+            <option value="10">10 Keys (Batch)</option>
+            <option value="25">25 Keys (Bulk)</option>
+          </select>
+        </div>
+
+        <!-- GENERATE SUBMIT -->
+        <button type="button" class="btn-generate-main" onclick="submitCreateCredential()">
+          <span>⚡</span>
+          <span id="btn-gen-text">SAVE & DEPLOY TO FIREBASE</span>
+        </button>
+      </div>
+
+      <!-- RIGHT COLUMN: LIVE KEYS LIST -->
+      <div class="panel-card">
+        <div class="list-header-bar">
+          <div class="panel-title" style="margin-bottom:0;">
+            <span>📋</span>
+            <span>REMOTE CONTROL CONSOLE</span>
+          </div>
+
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="btn-nav" onclick="exportKeysList('json')" style="font-size:11px;padding:6px 12px;">
+              <span>💾</span>
+              <span>EXPORT JSON</span>
+            </button>
+            <button type="button" class="btn-nav" onclick="exportKeysList('txt')" style="font-size:11px;padding:6px 12px;">
+              <span>📄</span>
+              <span>EXPORT TXT</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SEARCH AND FILTERS -->
+        <div class="search-filter-box" style="margin-bottom:12px;">
+          <input type="text" id="search-input" class="form-input" placeholder="🔍 Search by Key, Username, Client Note..." oninput="renderKeysList()" />
+        </div>
+
+        <div class="filter-pills-bar">
+          <button type="button" class="pill-btn active" onclick="setFilter('all', this)">ALL (<span id="count-all">0</span>)</button>
+          <button type="button" class="pill-btn" onclick="setFilter('active', this)">🟢 ACTIVE (<span id="count-active">0</span>)</button>
+          <button type="button" class="pill-btn" onclick="setFilter('paused', this)">⏸️ PAUSED (<span id="count-paused">0</span>)</button>
+          <button type="button" class="pill-btn" onclick="setFilter('stopped', this)">🛑 STOPPED (<span id="count-stopped">0</span>)</button>
+          <button type="button" class="pill-btn" onclick="setFilter('expired', this)">⏰ EXPIRED (<span id="count-expired">0</span>)</button>
+          <button type="button" class="pill-btn" onclick="setFilter('key', this)">🔑 KEYS ONLY</button>
+          <button type="button" class="pill-btn" onclick="setFilter('user_pass', this)">👤 USER/PASS ONLY</button>
+        </div>
+
+        <!-- KEYS LIST TARGET -->
+        <div class="keys-container" id="keys-list-target">
+          <div class="empty-keys-state">
+            <div style="font-size:32px;margin-bottom:12px;">🔄</div>
+            <div style="font-weight:700;color:#ffffff;margin-bottom:6px;">Connecting to Cloud Firestore...</div>
+            <div style="font-size:12px;">Fetching real-time database credentials...</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- API INTEGRATION MODAL -->
+  <div class="modal-overlay" id="modal-api">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">⚡ CLIENT KEY VERIFICATION API</div>
+        <button type="button" class="btn-modal-close" onclick="closeModal('modal-api')">✕</button>
+      </div>
+
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">
+        Integrate your software, bot, or web app to verify these keys remotely in real-time.
+      </p>
+
+      <div style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;">
+        OPTION 1: DIRECT FIRESTORE CHECK (STANDALONE HTML / CLIENT)
+      </div>
+      <div class="code-block">// Direct Firestore verification in any JavaScript application:
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+const app = initializeApp({
+  apiKey: "AIzaSyDduI4_pB0Iwy298LdIsu8YRHsCB8sj-wU",
+  projectId: "gen-lang-client-0119482325"
+});
+const db = getFirestore(app, "ai-studio-rohitbhaiinforma-6957fd0d-1c3e-4070-bd77-f054dde6cf60");
+
+async function verifyLicenseKey(userKey) {
+  const ref = doc(db, "license_keys", userKey);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return { valid: false, reason: "Key does not exist" };
+  const d = snap.data();
+  if (d.status !== "active") return { valid: false, reason: "Key is " + d.status };
+  if (d.expiresAt && new Date(d.expiresAt) < new Date()) {
+    return { valid: false, reason: "Key has expired" };
+  }
+  return { valid: true, data: d };
+}</div>
+
+      <div style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--neon-cyan);margin-bottom:6px;">
+        OPTION 2: PYTHON VERIFICATION SCRIPT
+      </div>
+      <div class="code-block">import requests
+
+def check_rohit_key(key):
+    url = f"https://firestore.googleapis.com/v1/projects/gen-lang-client-0119482325/databases/ai-studio-rohitbhaiinforma-6957fd0d-1c3e-4070-bd77-f054dde6cf60/documents/license_keys/{key}?key=AIzaSyDduI4_pB0Iwy298LdIsu8YRHsCB8sj-wU"
+    r = requests.get(url)
+    if r.status_code != 200:
+        return False, "Invalid Key"
+    fields = r.json().get('fields', {})
+    status = fields.get('status', {}).get('stringValue', '')
+    if status != 'active':
+        return False, f"Key is {status}"
+    return True, "Key Authorized"</div>
+
+      <button type="button" class="btn-generate-main" onclick="closeModal('modal-api')" style="margin-top:14px;">
+        CLOSE WINDOW
+      </button>
+    </div>
+  </div>
+
+  <!-- FIREBASE CONFIG MODAL -->
+  <div class="modal-overlay" id="modal-config">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">⚙️ FIREBASE CLOUD DATABASE CONFIG</div>
+        <button type="button" class="btn-modal-close" onclick="closeModal('modal-config')">✕</button>
+      </div>
+
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">
+        This panel is pre-configured with your active Firestore project. If you wish to use a different Firebase project when uploading this HTML to GitHub Pages, Netlify, or Vercel, you can update it here.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">PROJECT ID</label>
+        <input type="text" id="cfg-projectId" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">FIRESTORE DATABASE ID</label>
+        <input type="text" id="cfg-dbId" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">API KEY</label>
+        <input type="text" id="cfg-apiKey" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">APP ID</label>
+        <input type="text" id="cfg-appId" class="form-input" />
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button type="button" class="btn-generate-main" onclick="saveCustomConfig()">
+          SAVE & RECONNECT
+        </button>
+        <button type="button" class="btn-nav" onclick="resetDefaultConfig()" style="justify-content:center;padding:14px 20px;">
+          RESET DEFAULT
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXTEND DURATION MODAL -->
+  <div class="modal-overlay" id="modal-extend">
+    <div class="modal-content" style="max-width:480px;">
+      <div class="modal-header">
+        <div class="modal-title">⏳ EXTEND CREDENTIAL VALIDITY</div>
+        <button type="button" class="btn-modal-close" onclick="closeModal('modal-extend')">✕</button>
+      </div>
+
+      <input type="hidden" id="extend-key-id" />
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;" id="extend-key-subtitle">
+        Select duration to add to current validity:
+      </p>
+
+      <div class="preset-grid" style="margin-bottom:18px;">
+        <button type="button" class="btn-preset" onclick="applyExtend(3600, '1 Hour')">+1 HOUR</button>
+        <button type="button" class="btn-preset" onclick="applyExtend(86400, '1 Day')">+1 DAY</button>
+        <button type="button" class="btn-preset" onclick="applyExtend(604800, '7 Days')">+7 DAYS</button>
+        <button type="button" class="btn-preset" onclick="applyExtend(864000, '10 Days')">+10 DAYS</button>
+        <button type="button" class="btn-preset" onclick="applyExtend(1296000, '15 Days')">+15 DAYS</button>
+        <button type="button" class="btn-preset" onclick="applyExtend(2592000, '30 Days')">+30 DAYS</button>
+        <button type="button" class="btn-preset permanent-active" style="grid-column: span 3;" onclick="applyExtend(-1, 'Permanent')">♾️ MAKE PERMANENT (LIFETIME)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-popup" id="toast-el">
+    <span id="toast-icon">✓</span>
+    <span id="toast-msg">Success</span>
+  </div>
+
+  <script>
+    // ==========================================================================
+    // STATE & INITIALIZATION
+    // ==========================================================================
+    let currentType = 'key'; // 'key' | 'user_pass'
+    let selectedDurationSeconds = 86400; // default 1 day
+    let selectedDurationLabel = '1 Day';
+    let currentFilter = 'all';
+    window.allKeysData = [];
+
+    // SWITCH TYPE (KEY vs USER_PASS)
+    function switchGenType(type) {
+      currentType = type;
+      const keyTab = document.getElementById('tab-key');
+      const userpassTab = document.getElementById('tab-userpass');
+      const keyWrap = document.getElementById('form-key-wrap');
+      const userpassWrap = document.getElementById('form-userpass-wrap');
+      const batchWrap = document.getElementById('batch-wrap');
+
+      if (type === 'key') {
+        keyTab.classList.add('active');
+        userpassTab.classList.remove('active');
+        keyWrap.style.display = 'block';
+        userpassWrap.style.display = 'none';
+        batchWrap.style.display = 'block';
+        document.getElementById('btn-gen-text').textContent = 'SAVE & DEPLOY KEY TO FIREBASE';
+      } else {
+        keyTab.classList.remove('active');
+        userpassTab.classList.add('active');
+        keyWrap.style.display = 'none';
+        userpassWrap.style.display = 'block';
+        batchWrap.style.display = 'none';
+        document.getElementById('btn-gen-text').textContent = 'SAVE & DEPLOY USER/PASS TO FIREBASE';
+        if (!document.getElementById('gen-username-val').value) generateRandomUsername();
+        if (!document.getElementById('gen-password-val').value) generateRandomPassword();
+      }
+    }
+
+    // DURATION SELECTION
+    function selectDuration(btn, secs, label) {
+      document.querySelectorAll('.preset-grid .btn-preset').forEach(b => {
+        b.classList.remove('active');
+        b.classList.remove('permanent-active');
+      });
+      if (secs === -1) {
+        btn.classList.add('permanent-active');
+      } else {
+        btn.classList.add('active');
+      }
+      selectedDurationSeconds = secs;
+      selectedDurationLabel = label;
+    }
+
+    // RANDOM STRING GENERATORS
+    function generateRandomKeyString(prefix = 'ROHIT') {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      function chunk(len) {
+        let res = '';
+        for (let i = 0; i < len; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+        return res;
+      }
+      const val = `${prefix}-${chunk(4)}-${chunk(4)}-${chunk(4)}`;
+      document.getElementById('gen-key-val').value = val;
+      return val;
+    }
+
+    function generateRandomUsername() {
+      const num = Math.floor(1000 + Math.random() * 9000);
+      const val = `rohit_user_${num}`;
+      document.getElementById('gen-username-val').value = val;
+      return val;
+    }
+
+    function generateRandomPassword() {
+      const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789#@!';
+      let pwd = '';
+      for (let i = 0; i < 10; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+      document.getElementById('gen-password-val').value = pwd;
+      return pwd;
+    }
+
+    // INITIAL GENERATION ON LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      generateRandomKeyString();
+      // Tick every second to update countdowns
+      setInterval(updateCountdownsLive, 1000);
+    });
+
+    // ==========================================================================
+    // CREATE CREDENTIAL SUBMIT (FIRESTORE WRITE)
+    // ==========================================================================
+    async function submitCreateCredential() {
+      if (!window.rohitFirebaseDB) {
+        showToast('⚠ Firebase not connected! Check your network or config.');
+        return;
+      }
+
+      const clientNote = document.getElementById('gen-client-val').value.trim() || 'General Access';
+      const now = new Date();
+      let expiresAt = null;
+
+      if (selectedDurationSeconds > 0) {
+        expiresAt = new Date(now.getTime() + selectedDurationSeconds * 1000).toISOString();
+      }
+
+      const db = window.rohitFirebaseDB;
+      const setDoc = window.rohitFirestoreSetDoc;
+      const doc = window.rohitFirestoreDoc;
+
+      if (currentType === 'key') {
+        const batchCount = parseInt(document.getElementById('gen-batch-count').value, 10) || 1;
+        const initialKey = document.getElementById('gen-key-val').value.trim() || generateRandomKeyString();
+
+        try {
+          for (let i = 0; i < batchCount; i++) {
+            const keyString = (i === 0) ? initialKey : generateRandomKeyString();
+            const payload = {
+              key: keyString,
+              type: 'key',
+              status: 'active',
+              durationLabel: selectedDurationLabel,
+              durationSeconds: selectedDurationSeconds,
+              label: clientNote + (batchCount > 1 ? ` #${i + 1}` : ''),
+              createdAt: now.toISOString(),
+              expiresAt: expiresAt,
+              pausedAt: null,
+              remainingSecondsWhenPaused: null,
+              usageCount: 0
+            };
+
+            await setDoc(doc(db, "license_keys", keyString), payload);
+          }
+
+          showToast(`✓ Successfully deployed ${batchCount} Key(s) to Firebase!`);
+          document.getElementById('gen-client-val').value = '';
+          generateRandomKeyString();
+        } catch (err) {
+          console.error("Deploy key error:", err);
+          showToast(`Error creating key: ${err.message}`);
+        }
+
+      } else {
+        // USER & PASS
+        const username = document.getElementById('gen-username-val').value.trim();
+        const password = document.getElementById('gen-password-val').value.trim();
+
+        if (!username || !password) {
+          showToast('⚠ Please provide both Username and Password');
+          return;
+        }
+
+        const docId = `user_${username}`;
+        const payload = {
+          key: docId,
+          type: 'user_pass',
+          username: username,
+          password: password,
+          status: 'active',
+          durationLabel: selectedDurationLabel,
+          durationSeconds: selectedDurationSeconds,
+          label: clientNote,
+          createdAt: now.toISOString(),
+          expiresAt: expiresAt,
+          pausedAt: null,
+          remainingSecondsWhenPaused: null,
+          usageCount: 0
+        };
+
+        try {
+          await setDoc(doc(db, "license_keys", docId), payload);
+          showToast(`✓ Account '${username}' deployed to Firebase!`);
+          document.getElementById('gen-username-val').value = '';
+          document.getElementById('gen-password-val').value = '';
+          document.getElementById('gen-client-val').value = '';
+          generateRandomUsername();
+          generateRandomPassword();
+        } catch (err) {
+          console.error("Deploy user error:", err);
+          showToast(`Error creating account: ${err.message}`);
+        }
+      }
+    }
+
+    // ==========================================================================
+    // ACTIONS: PAUSE, RESUME, STOP, DELETE, EXTEND
+    // ==========================================================================
+    async function togglePauseKey(keyId, currentStatus, expiresAtStr, remainingSec) {
+      if (!window.rohitFirebaseDB) return;
+      const db = window.rohitFirebaseDB;
+      const updateDoc = window.rohitFirestoreUpdateDoc;
+      const doc = window.rohitFirestoreDoc;
+      const ref = doc(db, "license_keys", keyId);
+
+      try {
+        if (currentStatus === 'paused') {
+          // RESUME: add back remaining seconds
+          const secs = remainingSec || 0;
+          let newExpiresAt = null;
+          if (secs > 0) {
+            newExpiresAt = new Date(Date.now() + secs * 1000).toISOString();
+          }
+          await updateDoc(ref, {
+            status: 'active',
+            expiresAt: newExpiresAt,
+            pausedAt: null,
+            remainingSecondsWhenPaused: null
+          });
+          showToast('▶️ Credential resumed and unpaused!');
+        } else {
+          // PAUSE: freeze remaining time
+          let remaining = 0;
+          if (expiresAtStr) {
+            const expMs = new Date(expiresAtStr).getTime();
+            remaining = Math.max(0, Math.floor((expMs - Date.now()) / 1000));
+          }
+          await updateDoc(ref, {
+            status: 'paused',
+            pausedAt: new Date().toISOString(),
+            remainingSecondsWhenPaused: remaining
+          });
+          showToast('⏸️ Credential paused! Remaining time frozen.');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message);
+      }
+    }
+
+    async function stopRevokeKey(keyId) {
+      if (!confirm(`Are you sure you want to STOP & REVOKE key '${keyId}'? All access will immediately be denied.`)) return;
+      if (!window.rohitFirebaseDB) return;
+      const db = window.rohitFirebaseDB;
+      const updateDoc = window.rohitFirestoreUpdateDoc;
+      const doc = window.rohitFirestoreDoc;
+
+      try {
+        await updateDoc(doc(db, "license_keys", keyId), {
+          status: 'stopped',
+          stoppedAt: new Date().toISOString()
+        });
+        showToast('🛑 Key has been STOPPED & REVOKED remotely!');
+      } catch (err) {
+        showToast('Error: ' + err.message);
+      }
+    }
+
+    async function deleteKeyPermanently(keyId) {
+      if (!confirm(`⚠️ PERMANENT DELETE: Are you sure you want to permanently delete '${keyId}' from Firebase? This cannot be undone.`)) return;
+      if (!window.rohitFirebaseDB) return;
+      const db = window.rohitFirebaseDB;
+      const deleteDoc = window.rohitFirestoreDeleteDoc;
+      const doc = window.rohitFirestoreDoc;
+
+      try {
+        await deleteDoc(doc(db, "license_keys", keyId));
+        showToast('🗑️ Key permanently deleted from database!');
+      } catch (err) {
+        showToast('Error: ' + err.message);
+      }
+    }
+
+    function openExtendModal(keyId, label) {
+      document.getElementById('extend-key-id').value = keyId;
+      document.getElementById('extend-key-subtitle').textContent = `Target: ${keyId} (${label || 'License'})`;
+      openModal('modal-extend');
+    }
+
+    async function applyExtend(addSeconds, addLabel) {
+      const keyId = document.getElementById('extend-key-id').value;
+      if (!keyId || !window.rohitFirebaseDB) return;
+      const db = window.rohitFirebaseDB;
+      const updateDoc = window.rohitFirestoreUpdateDoc;
+      const doc = window.rohitFirestoreDoc;
+
+      const item = window.allKeysData.find(k => k.id === keyId || k.key === keyId);
+      if (!item) return;
+
+      try {
+        let newExpiresAt = null;
+        if (addSeconds === -1) {
+          newExpiresAt = null; // Permanent
+        } else {
+          // If already active with future expiration, add to it. Otherwise add from now.
+          let baseMs = Date.now();
+          if (item.expiresAt && new Date(item.expiresAt).getTime() > Date.now()) {
+            baseMs = new Date(item.expiresAt).getTime();
+          }
+          newExpiresAt = new Date(baseMs + addSeconds * 1000).toISOString();
+        }
+
+        await updateDoc(doc(db, "license_keys", keyId), {
+          expiresAt: newExpiresAt,
+          status: 'active',
+          durationLabel: addSeconds === -1 ? 'Permanent' : `Extended +${addLabel}`
+        });
+
+        closeModal('modal-extend');
+        showToast(`⏳ Successfully extended by ${addLabel}!`);
+      } catch (err) {
+        showToast('Error extending: ' + err.message);
+      }
+    }
+
+    // ==========================================================================
+    // RENDER & FILTER LIST
+    // ==========================================================================
+    function setFilter(f, btn) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-pills-bar .pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderKeysList();
+    }
+
+    function computeStatus(item) {
+      if (item.status === 'paused') return 'paused';
+      if (item.status === 'stopped') return 'stopped';
+      if (!item.expiresAt) return 'active'; // permanent
+      if (new Date(item.expiresAt) < new Date()) return 'expired';
+      return 'active';
+    }
+
+    function renderKeysList() {
+      const container = document.getElementById('keys-list-target');
+      if (!container) return;
+
+      const searchVal = (document.getElementById('search-input').value || '').toLowerCase().trim();
+      const list = window.allKeysData || [];
+
+      let filtered = list.filter(item => {
+        const status = computeStatus(item);
+        if (currentFilter === 'active' && status !== 'active') return false;
+        if (currentFilter === 'paused' && status !== 'paused') return false;
+        if (currentFilter === 'stopped' && status !== 'stopped') return false;
+        if (currentFilter === 'expired' && status !== 'expired') return false;
+        if (currentFilter === 'key' && item.type !== 'key') return false;
+        if (currentFilter === 'user_pass' && item.type !== 'user_pass') return false;
+
+        if (searchVal) {
+          const matchKey = (item.key || '').toLowerCase().includes(searchVal);
+          const matchUser = (item.username || '').toLowerCase().includes(searchVal);
+          const matchLabel = (item.label || '').toLowerCase().includes(searchVal);
+          return matchKey || matchUser || matchLabel;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-keys-state">
+            <div style="font-size:32px;margin-bottom:12px;">🔍</div>
+            <div style="font-weight:700;color:#ffffff;margin-bottom:6px;">No Credentials Found</div>
+            <div style="font-size:12px;">Create a new key or adjust your search filter above.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const status = computeStatus(item);
+        const isUserPass = item.type === 'user_pass';
+        const displayVal = isUserPass ? `${item.username}` : `${item.key}`;
+        const keyId = item.id || item.key;
+
+        return `
+          <div class="key-card status-${status}" id="card-${keyId}">
+            <div class="key-card-header">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span class="key-string-badge">
+                  <span>${isUserPass ? '👤' : '🔑'}</span>
+                  <span>${escapeHtml(displayVal)}</span>
+                </span>
+                <span class="key-status-tag tag-${status}">
+                  ${status.toUpperCase()}
+                </span>
+                <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">
+                  ${item.durationLabel || 'Custom'}
+                </span>
+              </div>
+
+              <!-- LIVE COUNTDOWN DISPLAY -->
+              <div class="countdown-timer" id="cd-${keyId}">
+                ${formatCountdown(item, status)}
+              </div>
+            </div>
+
+            <!-- CREDENTIAL EXTRA INFO -->
+            ${isUserPass ? `
+              <div style="background:rgba(0,0,0,0.3);border:1px dashed rgba(0,240,255,0.2);border-radius:8px;padding:8px 12px;margin-bottom:10px;display:flex;gap:20px;font-family:var(--font-mono);font-size:12px;">
+                <div><span style="color:var(--text-muted);">Username:</span> <b style="color:var(--neon-cyan);">${escapeHtml(item.username)}</b></div>
+                <div><span style="color:var(--text-muted);">Password:</span> <b style="color:#ffffff;">${escapeHtml(item.password)}</b></div>
+              </div>
+            ` : ''}
+
+            <div class="key-meta-row">
+              <div class="meta-chip">
+                <span>📝</span>
+                <span class="meta-val">${escapeHtml(item.label || 'No remark')}</span>
+              </div>
+              <div class="meta-chip">
+                <span>📅 Created:</span>
+                <span class="meta-val">${item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'N/A'}</span>
+              </div>
+              <div class="meta-chip">
+                <span>⏰ Expires:</span>
+                <span class="meta-val">${item.expiresAt ? new Date(item.expiresAt).toLocaleString() : 'PERMANENT'}</span>
+              </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="key-actions-row">
+              <!-- COPY BUTTON -->
+              <button type="button" class="btn-key-ctrl" onclick="copyCredentialDetails('${keyId}')" title="Copy credential">
+                <span>📋</span>
+                <span>COPY</span>
+              </button>
+
+              <!-- PAUSE / RESUME -->
+              ${status === 'paused' ? `
+                <button type="button" class="btn-key-ctrl btn-ctrl-resume" onclick="togglePauseKey('${keyId}', 'paused', '${item.expiresAt || ''}', ${item.remainingSecondsWhenPaused || 0})" title="Resume key">
+                  <span>▶️</span>
+                  <span>RESUME</span>
+                </button>
+              ` : (status === 'active' ? `
+                <button type="button" class="btn-key-ctrl btn-ctrl-pause" onclick="togglePauseKey('${keyId}', 'active', '${item.expiresAt || ''}', 0)" title="Pause key">
+                  <span>⏸️</span>
+                  <span>PAUSE</span>
+                </button>
+              ` : '')}
+
+              <!-- EXTEND -->
+              <button type="button" class="btn-key-ctrl btn-ctrl-extend" onclick="openExtendModal('${keyId}', '${escapeHtml(item.label || '')}')" title="Add hours/days">
+                <span>⏳</span>
+                <span>EXTEND</span>
+              </button>
+
+              <!-- STOP / REVOKE -->
+              ${status !== 'stopped' ? `
+                <button type="button" class="btn-key-ctrl btn-ctrl-stop" onclick="stopRevokeKey('${keyId}')" title="Permanently stop & revoke">
+                  <span>🛑</span>
+                  <span>STOP</span>
+                </button>
+              ` : ''}
+
+              <!-- DELETE -->
+              <button type="button" class="btn-key-ctrl btn-ctrl-delete" onclick="deleteKeyPermanently('${keyId}')" title="Delete from Firebase">
+                <span>🗑️</span>
+                <span>DELETE</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function formatCountdown(item, status) {
+      if (status === 'stopped') return '🛑 STOPPED';
+      if (status === 'paused') return '⏸️ PAUSED';
+      if (!item.expiresAt) return '♾️ PERMANENT';
+
+      const diff = new Date(item.expiresAt).getTime() - Date.now();
+      if (diff <= 0) return '⏰ EXPIRED';
+
+      const totalSec = Math.floor(diff / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
+
+      if (days > 0) {
+        return `⏳ ${days}d ${hours}h ${mins}m`;
+      }
+      return `⏳ ${hours}h ${mins}m ${secs}s`;
+    }
+
+    function updateCountdownsLive() {
+      if (!window.allKeysData) return;
+      window.allKeysData.forEach(item => {
+        const keyId = item.id || item.key;
+        const el = document.getElementById(`cd-${keyId}`);
+        if (el) {
+          const status = computeStatus(item);
+          el.textContent = formatCountdown(item, status);
+        }
+      });
+    }
+
+    function updateStats() {
+      const list = window.allKeysData || [];
+      let total = list.length;
+      let active = 0, paused = 0, stopped = 0, expired = 0;
+
+      list.forEach(item => {
+        const s = computeStatus(item);
+        if (s === 'active') active++;
+        else if (s === 'paused') paused++;
+        else if (s === 'stopped') stopped++;
+        else if (s === 'expired') expired++;
+      });
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-active').textContent = active;
+      document.getElementById('stat-paused').textContent = paused;
+      document.getElementById('stat-revoked').textContent = (stopped + expired);
+
+      document.getElementById('count-all').textContent = total;
+      document.getElementById('count-active').textContent = active;
+      document.getElementById('count-paused').textContent = paused;
+      document.getElementById('count-stopped').textContent = stopped;
+      document.getElementById('count-expired').textContent = expired;
+    }
+
+    // ==========================================================================
+    // EXPORT & COPY
+    // ==========================================================================
+    async function copyCredentialDetails(keyId) {
+      const item = window.allKeysData.find(k => k.id === keyId || k.key === keyId);
+      if (!item) return;
+
+      let str = '';
+      if (item.type === 'user_pass') {
+        str = `Username: ${item.username}\nPassword: ${item.password}\nValidity: ${item.durationLabel}\nExpires: ${item.expiresAt || 'Permanent'}`;
+      } else {
+        str = item.key;
+      }
+
+      try {
+        await navigator.clipboard.writeText(str);
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = str;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+
+      showToast(`✓ Copied '${item.key || item.username}' to clipboard!`);
+    }
+
+    function exportKeysList(type) {
+      const list = window.allKeysData || [];
+      if (list.length === 0) {
+        showToast('⚠ No keys available to export');
+        return;
+      }
+
+      let content = '';
+      let filename = `rohit_keys_${new Date().toISOString().slice(0, 10)}`;
+
+      if (type === 'json') {
+        content = JSON.stringify(list, null, 2);
+        filename += '.json';
+      } else {
+        // TXT format
+        content = list.map(item => {
+          if (item.type === 'user_pass') {
+            return `USER: ${item.username} | PASS: ${item.password} | STATUS: ${computeStatus(item)} | EXPIRES: ${item.expiresAt || 'PERMANENT'} | REMARK: ${item.label || ''}`;
+          }
+          return `KEY: ${item.key} | STATUS: ${computeStatus(item)} | EXPIRES: ${item.expiresAt || 'PERMANENT'} | REMARK: ${item.label || ''}`;
+        }).join('\n');
+        filename += '.txt';
+      }
+
+      const blob = new Blob([content], { type: type === 'json' ? 'application/json' : 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`💾 Exported ${list.length} credential(s) successfully!`);
+    }
+
+    // ==========================================================================
+    // STANDALONE HTML DOWNLOADER (SAVE THIS FILE DIRECTLY TO DISK)
+    // ==========================================================================
+    function downloadStandaloneHtml() {
+      // Get the entire HTML of the current document
+      const htmlContent = document.documentElement.outerHTML;
+      const fullDoc = "<!DOCTYPE html>\n" + htmlContent;
+      const blob = new Blob([fullDoc], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'rohit-key-manager.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('💾 Single HTML downloaded! You can upload this to GitHub Pages, Netlify, or open directly in your browser.');
+    }
+
+    // ==========================================================================
+    // MODALS & CONFIG
+    // ==========================================================================
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function openApiModal() {
+      openModal('modal-api');
+    }
+
+    function openConfigModal() {
+      const cfg = window.rohitCustomConfig || {
+        projectId: "gen-lang-client-0119482325",
+        firestoreDatabaseId: "ai-studio-rohitbhaiinforma-6957fd0d-1c3e-4070-bd77-f054dde6cf60",
+        apiKey: "AIzaSyDduI4_pB0Iwy298LdIsu8YRHsCB8sj-wU",
+        appId: "1:408673488788:web:26e4f5b25fe57b359e0981"
+      };
+
+      document.getElementById('cfg-projectId').value = cfg.projectId || '';
+      document.getElementById('cfg-dbId').value = cfg.firestoreDatabaseId || '';
+      document.getElementById('cfg-apiKey').value = cfg.apiKey || '';
+      document.getElementById('cfg-appId').value = cfg.appId || '';
+      openModal('modal-config');
+    }
+
+    function saveCustomConfig() {
+      const newCfg = {
+        projectId: document.getElementById('cfg-projectId').value.trim(),
+        firestoreDatabaseId: document.getElementById('cfg-dbId').value.trim(),
+        apiKey: document.getElementById('cfg-apiKey').value.trim(),
+        appId: document.getElementById('cfg-appId').value.trim(),
+        authDomain: `${document.getElementById('cfg-projectId').value.trim()}.firebaseapp.com`,
+        storageBucket: `${document.getElementById('cfg-projectId').value.trim()}.firebasestorage.app`
+      };
+
+      localStorage.setItem('rohit_custom_firebase_config', JSON.stringify(newCfg));
+      showToast('✓ Config saved! Reloading application...');
+      setTimeout(() => location.reload(), 800);
+    }
+
+    function resetDefaultConfig() {
+      localStorage.removeItem('rohit_custom_firebase_config');
+      showToast('✓ Reset to project default! Reloading...');
+      setTimeout(() => location.reload(), 800);
+    }
+
+    // TOAST HELPER
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast-el');
+      const msgEl = document.getElementById('toast-msg');
+      if (!el || !msgEl) return;
+      msgEl.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        el.classList.remove('show');
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>

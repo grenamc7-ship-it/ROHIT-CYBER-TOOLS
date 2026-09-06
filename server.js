@@ -890,6 +890,118 @@ app.get('/api/weather', async (req, res) => {
   }
 });
 
+// ==========================================================================
+// UNIVERSAL KEY MASTER: STANDALONE HTML & VERIFICATION API
+// ==========================================================================
+let firebaseApp = null;
+let firestoreDb = null;
+
+function getFirestoreDB() {
+  if (!firestoreDb) {
+    try {
+      const { initializeApp } = require('firebase/app');
+      const { getFirestore } = require('firebase/firestore');
+      const cfgPath = path.join(__dirname, 'firebase-applet-config.json');
+      if (fs.existsSync(cfgPath)) {
+        const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+        firebaseApp = initializeApp({
+          apiKey: cfg.apiKey,
+          authDomain: cfg.authDomain,
+          projectId: cfg.projectId,
+          storageBucket: cfg.storageBucket,
+          messagingSenderId: cfg.messagingSenderId,
+          appId: cfg.appId
+        }, 'server-key-verifier');
+        firestoreDb = getFirestore(firebaseApp, cfg.firestoreDatabaseId || '(default)');
+      }
+    } catch (e) {
+      console.warn('Firebase verifier lazy init warning:', e.message);
+    }
+  }
+  return firestoreDb;
+}
+
+// Standalone Key Manager Routes
+app.get('/key-manager', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'key-manager.html'));
+});
+
+app.get('/key-manager.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'key-manager.html'));
+});
+
+// Remote Key & User/Pass Verification API (Used by client scripts, software, or web tools)
+app.all('/api/keys/verify', async (req, res) => {
+  const key = (req.query.key || (req.body && req.body.key) || '').trim();
+  const username = (req.query.username || (req.body && req.body.username) || '').trim();
+  const password = (req.query.password || (req.body && req.body.password) || '').trim();
+
+  if (!key && (!username || !password)) {
+    return res.status(400).json({
+      valid: false,
+      error: 'Missing credentials. Pass ?key=... or ?username=...&password=...'
+    });
+  }
+
+  try {
+    const db = getFirestoreDB();
+    if (db) {
+      const { doc, getDoc, updateDoc } = require('firebase/firestore');
+      const docId = key ? key : `user_${username}`;
+      const docRef = doc(db, 'license_keys', docId);
+      const snap = await getDoc(docRef);
+
+      if (!snap.exists()) {
+        return res.status(404).json({ valid: false, error: 'License key or account does not exist' });
+      }
+
+      const data = snap.data();
+
+      if (data.type === 'user_pass' && data.password !== password) {
+        return res.status(401).json({ valid: false, error: 'Invalid password' });
+      }
+
+      if (data.status === 'paused') {
+        return res.status(403).json({ valid: false, status: 'paused', error: 'License is temporarily paused by admin' });
+      }
+
+      if (data.status === 'stopped') {
+        return res.status(403).json({ valid: false, status: 'stopped', error: 'License has been revoked and stopped' });
+      }
+
+      if (data.expiresAt) {
+        const expTime = new Date(data.expiresAt).getTime();
+        if (expTime <= Date.now()) {
+          return res.status(403).json({ valid: false, status: 'expired', error: 'License validity has expired' });
+        }
+      }
+
+      // Valid: update usage telemetry asynchronously
+      try {
+        updateDoc(docRef, {
+          lastUsedAt: new Date().toISOString(),
+          usageCount: (data.usageCount || 0) + 1
+        }).catch(() => {});
+      } catch (err) {}
+
+      return res.json({
+        valid: true,
+        status: 'active',
+        type: data.type,
+        label: data.label,
+        durationLabel: data.durationLabel,
+        expiresAt: data.expiresAt || 'PERMANENT',
+        remainingSeconds: data.expiresAt ? Math.max(0, Math.floor((new Date(data.expiresAt).getTime() - Date.now()) / 1000)) : -1
+      });
+    }
+
+    return res.status(503).json({ valid: false, error: 'Database service offline' });
+  } catch (err) {
+    console.error('Verify error:', err);
+    return res.status(500).json({ valid: false, error: err.message });
+  }
+});
+
 // Fallback to public/index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

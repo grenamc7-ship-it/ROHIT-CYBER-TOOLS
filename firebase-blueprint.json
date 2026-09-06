@@ -1,0 +1,74 @@
+{
+  "entities": {
+    "LicenseKey": {
+      "title": "LicenseKey",
+      "description": "Universal software license key or user/pass credential with time duration and remote pause/stop/delete controls.",
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Unique secret license key or identifier"
+        },
+        "type": {
+          "type": "string",
+          "description": "Credential type: 'key' or 'user_pass'"
+        },
+        "username": {
+          "type": "string",
+          "description": "Username if type is user_pass"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password if type is user_pass"
+        },
+        "durationLabel": {
+          "type": "string",
+          "description": "Duration label: 1 Hour, 1 Day, 10 Days, 15 Days, 30 Days, Permanent"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "description": "Duration in seconds or -1 for permanent"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status: active, paused, stopped, expired"
+        },
+        "label": {
+          "type": "string",
+          "description": "Customer name, device tag, or admin note"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of creation"
+        },
+        "expiresAt": {
+          "type": "string",
+          "description": "ISO timestamp of expiration or null for permanent"
+        },
+        "pausedAt": {
+          "type": "string",
+          "description": "ISO timestamp when the key was paused"
+        },
+        "remainingSecondsWhenPaused": {
+          "type": "number",
+          "description": "Frozen remaining seconds when paused"
+        },
+        "maxDevices": {
+          "type": "number",
+          "description": "Maximum allowed devices"
+        },
+        "usageCount": {
+          "type": "number",
+          "description": "Total verification or login counter"
+        }
+      },
+      "required": ["key", "type", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/license_keys/{keyId}": {
+      "schema": "LicenseKey",
+      "description": "Collection of remote-controllable license keys and user/password accounts"
+    }
+  }
+}

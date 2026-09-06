@@ -20,6 +20,32 @@ const WEATHER_API_URL = "https://nitin-wather-check-api.vercel.app/api";
 // Master Admin Secret Key for Rohit Bhai Admin Console
 const DEFAULT_ADMIN_SECRET = "rohitadmin2025";
 
+// High-speed Zero-Lag In-Memory Intelligence Cache (10 minutes TTL)
+const queryCache = new Map();
+const CACHE_TTL_MS = 10 * 60 * 1000;
+
+function getCachedData(key, query) {
+  if (!key || !query) return null;
+  const cacheKey = `${String(key).toLowerCase()}:${String(query).toLowerCase().trim()}`;
+  const hit = queryCache.get(cacheKey);
+  if (hit && (Date.now() - hit.timestamp < CACHE_TTL_MS)) {
+    return hit.data;
+  }
+  return null;
+}
+
+function setCachedData(key, query, data) {
+  if (!key || !query || !data) return;
+  // Don't cache error states
+  if (data.error && typeof data.error === 'string' && (data.error.includes('timed out') || data.error.includes('Down'))) return;
+  const cacheKey = `${String(key).toLowerCase()}:${String(query).toLowerCase().trim()}`;
+  queryCache.set(cacheKey, { timestamp: Date.now(), data });
+  if (queryCache.size > 500) {
+    const oldest = queryCache.keys().next().value;
+    queryCache.delete(oldest);
+  }
+}
+
 // Path to persistent users data file
 const DATA_DIR = path.join(__dirname, 'data');
 const USERS_FILE = path.join(DATA_DIR, 'users.json');
@@ -469,9 +495,14 @@ async function fallbackVehicleSearch(cleanRc, res) {
 }
 
 async function queryAdminModz(cleanQuery) {
+  const cached = getCachedData('adminmodz', cleanQuery);
+  if (cached) {
+    return { success: true, status: 200, data: cached };
+  }
+
   const url = `${ADMIN_MODZ_API_BASE}?query=${encodeURIComponent(cleanQuery)}&apikey=Demo`;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 25000);
+  const timeoutId = setTimeout(() => controller.abort(), 7500);
   try {
     const upstreamResponse = await fetch(url, {
       method: 'GET',
@@ -490,6 +521,7 @@ async function queryAdminModz(cleanQuery) {
       return { success: false, error: 'Invalid response from Admin Modz OSINT database' };
     }
     const sanitized = sanitizeIntelligenceData(data);
+    setCachedData('adminmodz', cleanQuery, sanitized);
     return { success: true, status: upstreamResponse.status, data: sanitized };
   } catch (err) {
     clearTimeout(timeoutId);
@@ -511,6 +543,12 @@ app.get('/api/osint', async (req, res) => {
   const cleanQuery = query.trim();
   recordSearchStat(cleanKey.toLowerCase());
 
+  // Zero-Lag Cache Check (instant sub-millisecond response)
+  const cachedHit = getCachedData(cleanKey, cleanQuery);
+  if (cachedHit) {
+    return res.json(cachedHit);
+  }
+
   // Direct handling for Admin Modz OSINT
   if (cleanKey.toLowerCase() === 'adminmodz' || cleanKey.toLowerCase() === 'admin' || cleanKey.toLowerCase() === 'modz') {
     const modzResult = await queryAdminModz(cleanQuery);
@@ -520,6 +558,7 @@ app.get('/api/osint', async (req, res) => {
         error: modzResult.error || 'Admin Modz OSINT network error'
       });
     }
+    setCachedData(cleanKey, cleanQuery, modzResult.data);
     return res.status(modzResult.status || 200).json(modzResult.data);
   }
 
@@ -527,7 +566,7 @@ app.get('/api/osint', async (req, res) => {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 25000);
+    const timeoutId = setTimeout(() => controller.abort(), 7500);
 
     const upstreamResponse = await fetch(upstreamUrl, {
       method: 'GET',
@@ -552,6 +591,7 @@ app.get('/api/osint', async (req, res) => {
       if (cleanKey === 'Aadhar' || cleanKey === 'Aadharad' || cleanKey === 'Num' || cleanKey === 'Numad') {
         const modzFallback = await queryAdminModz(cleanQuery);
         if (modzFallback.success && modzFallback.data && Array.isArray(modzFallback.data.records) && modzFallback.data.records.length > 0) {
+          setCachedData(cleanKey, cleanQuery, modzFallback.data);
           return res.json(modzFallback.data);
         }
       }
@@ -570,6 +610,7 @@ app.get('/api/osint', async (req, res) => {
       if (cleanKey === 'Aadhar' || cleanKey === 'Aadharad' || cleanKey === 'Num' || cleanKey === 'Numad') {
         const modzFallback = await queryAdminModz(cleanQuery);
         if (modzFallback.success && modzFallback.data && Array.isArray(modzFallback.data.records) && modzFallback.data.records.length > 0) {
+          setCachedData(cleanKey, cleanQuery, modzFallback.data);
           return res.json(modzFallback.data);
         }
       }
@@ -594,6 +635,7 @@ app.get('/api/osint', async (req, res) => {
       }
     }
 
+    setCachedData(cleanKey, cleanQuery, sanitized);
     return res.status(upstreamResponse.status).json(sanitized);
 
   } catch (error) {
@@ -605,6 +647,7 @@ app.get('/api/osint', async (req, res) => {
     if (cleanKey === 'Aadhar' || cleanKey === 'Aadharad' || cleanKey === 'Num' || cleanKey === 'Numad') {
       const modzFallback = await queryAdminModz(cleanQuery);
       if (modzFallback.success && modzFallback.data && Array.isArray(modzFallback.data.records) && modzFallback.data.records.length > 0) {
+        setCachedData(cleanKey, cleanQuery, modzFallback.data);
         return res.json(modzFallback.data);
       }
     }

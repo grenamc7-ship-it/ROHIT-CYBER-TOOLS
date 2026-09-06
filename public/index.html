@@ -1429,31 +1429,151 @@
       box-shadow: 0 0 20px var(--neon-amber);
     }
 
-    /* RAW JSON ACCORDION */
+    /* RESULTS VIEW MODE TABS */
+    .results-view-tabs {
+      display: inline-flex;
+      background: rgba(3, 8, 22, 0.7);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .view-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .view-tab-btn:hover {
+      color: #ffffff;
+      background: rgba(0, 240, 255, 0.1);
+    }
+
+    .view-tab-btn.active {
+      color: #020612;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+      font-weight: 800;
+    }
+
+    /* RAW JSON PANEL - PERMANENT HIGH-TECH DISPLAY */
     .raw-json-panel {
       margin-top: 24px;
-      background: rgba(3, 8, 22, 0.85);
-      border: 1px solid rgba(0, 240, 255, 0.2);
+      background: rgba(2, 6, 23, 0.95);
+      border: 1.5px solid rgba(0, 240, 255, 0.35);
       border-radius: 18px;
       overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 240, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .raw-json-panel:hover {
+      border-color: rgba(0, 240, 255, 0.55);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 240, 255, 0.25);
     }
 
     .raw-json-header {
-      padding: 16px 20px;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      cursor: pointer;
+      flex-wrap: wrap;
+      gap: 12px;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--neon-cyan);
-      background: rgba(0, 240, 255, 0.06);
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.12), rgba(3, 8, 22, 0.4));
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .raw-json-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .raw-json-tag-symbol {
+      background: rgba(0, 240, 255, 0.2);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .raw-json-title-text {
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .raw-json-stats-badge {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--neon-emerald);
+      color: var(--neon-emerald);
+      padding: 2px 10px;
+      border-radius: 9999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .raw-json-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-json-ctrl {
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-json-ctrl:hover {
+      background: rgba(0, 240, 255, 0.25);
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-json-ctrl.copied-glow {
+      background: rgba(16, 185, 129, 0.25) !important;
+      border-color: var(--neon-emerald) !important;
+      color: var(--neon-emerald) !important;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5) !important;
     }
 
     .raw-json-code-box {
       padding: 20px;
-      max-height: 380px;
+      max-height: 420px;
       overflow-y: auto;
       font-family: 'JetBrains Mono', monospace;
       font-size: 12.5px;
@@ -1461,6 +1581,22 @@
       line-height: 1.6;
       white-space: pre-wrap;
       word-break: break-all;
+      background: rgba(1, 4, 14, 0.9);
+      position: relative;
+    }
+
+    .raw-json-code-box::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .raw-json-code-box::-webkit-scrollbar-thumb {
+      background: rgba(0, 240, 255, 0.3);
+      border-radius: 4px;
+    }
+
+    .raw-json-code-box::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-cyan);
     }
 
     /* ==========================================================================
@@ -2124,15 +2260,29 @@
         <section class="results-display-area" id="results-display-area">
           <div class="results-hud-bar">
             <div class="results-hud-title">
-              <span style="color:var(--neon-emerald);">●</span>
+              <span style="color:var(--neon-emerald);font-size:16px;">●</span>
               <span>INTELLIGENCE DOSSIER DECRYPTED</span>
             </div>
+
+            <!-- RESULTS VIEW MODE TABS -->
+            <div class="results-view-tabs" id="results-view-tabs">
+              <button type="button" class="view-tab-btn active" id="view-tab-both" onclick="setResultsViewMode('both')">
+                <span>⚡ BOTH VIEWS</span>
+              </button>
+              <button type="button" class="view-tab-btn" id="view-tab-dossier" onclick="setResultsViewMode('dossier')">
+                <span>📊 DOSSIER CARDS</span>
+              </button>
+              <button type="button" class="view-tab-btn" id="view-tab-json" onclick="setResultsViewMode('json')">
+                <span>{ } RAW JSON</span>
+              </button>
+            </div>
+
             <div class="results-action-buttons">
               <button type="button" class="btn-action-tool" id="btn-copy-action" onclick="copyFullResult()">
                 <span>📋</span>
-                <span id="copy-label-text">COPY RESULT</span>
+                <span id="copy-label-text">COPY RAW JSON</span>
               </button>
-              <button type="button" class="btn-action-tool" onclick="downloadResultJson()">
+              <button type="button" class="btn-action-tool" id="btn-download-action" onclick="downloadResultJson()">
                 <span>💾</span>
                 <span>DOWNLOAD JSON</span>
               </button>
@@ -2146,13 +2296,29 @@
           <!-- Dynamic Formatted Results Cards -->
           <div id="formatted-intel-target"></div>
 
-          <!-- Collapsible Raw JSON Data -->
-          <div class="raw-json-panel">
-            <div class="raw-json-header" onclick="toggleRawJson()">
-              <span>{ } VIEW RAW JSON PAYLOAD</span>
-              <span id="json-toggle-arrow">▼</span>
+          <!-- PROMINENT RAW JSON DATA SECTION (ALWAYS VISIBLE & COPY/DOWNLOAD READY) -->
+          <div class="raw-json-panel" id="raw-json-panel">
+            <div class="raw-json-header">
+              <div class="raw-json-meta-left">
+                <span class="raw-json-tag-symbol">{ }</span>
+                <span class="raw-json-title-text">RAW INTELLIGENCE DATA (JSON)</span>
+                <span class="raw-json-stats-badge" id="raw-json-stats">0 BYTES</span>
+              </div>
+              <div class="raw-json-controls">
+                <button type="button" class="btn-json-ctrl" id="btn-raw-json-copy" onclick="copyRawJson(this)" title="Copy sanitized raw JSON">
+                  <span>📋</span>
+                  <span>COPY JSON</span>
+                </button>
+                <button type="button" class="btn-json-ctrl" onclick="downloadResultJson()" title="Download raw JSON file">
+                  <span>💾</span>
+                  <span>DOWNLOAD JSON</span>
+                </button>
+                <button type="button" class="btn-json-ctrl" id="btn-toggle-json-size" onclick="toggleJsonSize()" title="Toggle Compact / Expanded View">
+                  <span id="json-size-label">⛶ EXPAND</span>
+                </button>
+              </div>
             </div>
-            <div class="raw-json-code-box" id="raw-json-box" style="display:none;">
+            <div class="raw-json-code-box" id="raw-json-box">
               <pre><code id="raw-json-code"></code></pre>
             </div>
           </div>
@@ -2338,13 +2504,16 @@
 
   <script>
     // ==========================================================================
-    // INTERACTIVE NEON PARTICLE CANVAS
+    // ZERO-LAG ULTRA-FAST AMBIENT PARTICLE ENGINE (OPTIMIZED 60FPS)
     // ==========================================================================
     const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, particles = [];
+    const ctx = canvas ? canvas.getContext('2d', { alpha: true }) : null;
+    let width = 0, height = 0, particles = [];
+    let resizeTimer = null;
+    let animFrameId = null;
 
     function resizeCanvas() {
+      if (!canvas) return;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
       createParticles();
@@ -2352,73 +2521,91 @@
 
     class Particle {
       constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.radius = Math.random() * 2 + 0.8;
-        this.colorType = Math.random() > 0.5 ? 'cyan' : 'pink';
-        this.alpha = Math.random() * 0.6 + 0.25;
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * (width || 800);
+        this.y = Math.random() * (height || 600);
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        this.radius = Math.random() * 1.5 + 0.8;
+        this.color = Math.random() > 0.5 ? 'rgba(0, 240, 255, 0.75)' : 'rgba(255, 0, 127, 0.75)';
       }
 
       update() {
         this.x += this.vx;
         this.y += this.vy;
         if (this.x < 0) this.x = width;
-        if (this.x > width) this.x = 0;
+        else if (this.x > width) this.x = 0;
         if (this.y < 0) this.y = height;
-        if (this.y > height) this.y = 0;
+        else if (this.y > height) this.y = 0;
       }
 
       draw() {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.colorType === 'cyan' 
-          ? `rgba(0, 240, 255, ${this.alpha})` 
-          : `rgba(255, 0, 127, ${this.alpha})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = this.colorType === 'cyan' ? '#00f0ff' : '#ff007f';
+        ctx.arc(this.x, this.y, this.radius, 0, 6.283);
+        ctx.fillStyle = this.color;
         ctx.fill();
-        ctx.shadowBlur = 0;
       }
     }
 
     function createParticles() {
       particles = [];
-      const count = Math.floor(Math.min(width, 1400) / 14);
+      // Ultra-lightweight particle count: eliminates all lag on mobile & low-end devices
+      const count = width < 768 ? 14 : 24;
       for (let i = 0; i < count; i++) {
         particles.push(new Particle());
       }
     }
 
     function animateParticles() {
+      if (!ctx) return;
+      
+      // Zero CPU usage when browser tab is inactive / backgrounded
+      if (document.hidden) {
+        animFrameId = requestAnimationFrame(animateParticles);
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
+      const pLen = particles.length;
+      for (let i = 0; i < pLen; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < pLen; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          if (dx > 90 || dx < -90) continue;
+          const dy = p1.y - p2.y;
+          if (dy > 90 || dy < -90) continue;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 8100) { // 90^2
+            const dist = Math.sqrt(distSq);
             ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            const lineAlpha = (1 - dist / 120) * 0.25;
-            ctx.strokeStyle = `rgba(0, 240, 255, ${lineAlpha})`;
-            ctx.lineWidth = 0.8;
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(0, 240, 255, ${(1 - dist / 90) * 0.22})`;
+            ctx.lineWidth = 0.7;
             ctx.stroke();
           }
         }
-        particles[i].update();
-        particles[i].draw();
+        p1.update();
+        p1.draw();
       }
 
-      requestAnimationFrame(animateParticles);
+      animFrameId = requestAnimationFrame(animateParticles);
     }
 
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    animateParticles();
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resizeCanvas, 150);
+    }, { passive: true });
+
+    if (canvas && ctx) {
+      resizeCanvas();
+      animateParticles();
+    }
 
     // LIVE CLOCK HUD (IST)
     function updateLiveClock() {
@@ -2859,7 +3046,16 @@
     function renderToolResults(raw) {
       const data = cleanIntelligenceData(raw);
       currentResultData = data;
-      rawJsonCode.textContent = JSON.stringify(data, null, 2);
+      const jsonString = JSON.stringify(data, null, 2);
+      rawJsonCode.textContent = jsonString;
+
+      // Calculate payload size for HUD
+      const bytes = new Blob([jsonString]).size;
+      const statsEl = document.getElementById('raw-json-stats');
+      if (statsEl) {
+        statsEl.textContent = bytes > 1024 ? `${(bytes / 1024).toFixed(1)} KB` : `${bytes} BYTES`;
+      }
+
       formattedIntelTarget.innerHTML = '';
 
       // Check if API returned an error message or rate limit
@@ -2878,6 +3074,12 @@
       } else {
         renderSearchIntel(data);
       }
+
+      // Ensure Raw JSON panel is open and in active view mode
+      if (rawJsonBox) {
+        rawJsonBox.style.display = 'block';
+      }
+      setResultsViewMode(currentViewMode || 'both');
 
       resultsDisplayArea.style.display = 'block';
       resultsDisplayArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3389,21 +3591,67 @@
       `;
     }
 
+    // ==========================================================================
+    // VIEW MODE SWITCHING & RAW JSON CONTROLS (ZERO LAG & DIRECT ACCESS)
+    // ==========================================================================
+    let currentViewMode = 'both'; // 'both', 'dossier', 'json'
+    let isJsonExpanded = false;
+
+    function setResultsViewMode(mode) {
+      currentViewMode = mode;
+      const bothBtn = document.getElementById('view-tab-both');
+      const dossierBtn = document.getElementById('view-tab-dossier');
+      const jsonBtn = document.getElementById('view-tab-json');
+      const dossierSection = document.getElementById('formatted-intel-target');
+      const jsonPanel = document.getElementById('raw-json-panel');
+      const jsonBox = document.getElementById('raw-json-box');
+
+      if (bothBtn) bothBtn.classList.toggle('active', mode === 'both');
+      if (dossierBtn) dossierBtn.classList.toggle('active', mode === 'dossier');
+      if (jsonBtn) jsonBtn.classList.toggle('active', mode === 'json');
+
+      if (mode === 'dossier') {
+        if (dossierSection) dossierSection.style.display = 'block';
+        if (jsonPanel) jsonPanel.style.display = 'none';
+      } else if (mode === 'json') {
+        if (dossierSection) dossierSection.style.display = 'none';
+        if (jsonPanel) jsonPanel.style.display = 'block';
+        if (jsonBox) jsonBox.style.display = 'block';
+      } else {
+        // Both views
+        if (dossierSection) dossierSection.style.display = 'block';
+        if (jsonPanel) jsonPanel.style.display = 'block';
+        if (jsonBox) jsonBox.style.display = 'block';
+      }
+    }
+
+    function toggleJsonSize() {
+      const box = document.getElementById('raw-json-box');
+      const label = document.getElementById('json-size-label');
+      if (!box) return;
+      isJsonExpanded = !isJsonExpanded;
+      if (isJsonExpanded) {
+        box.style.maxHeight = '800px';
+        if (label) label.textContent = '🗗 COMPACT';
+      } else {
+        box.style.maxHeight = '420px';
+        if (label) label.textContent = '⛶ EXPAND';
+      }
+    }
+
     function toggleRawJson() {
-      const isHidden = rawJsonBox.style.display === 'none';
-      rawJsonBox.style.display = isHidden ? 'block' : 'none';
-      jsonToggleArrow.textContent = isHidden ? '▲' : '▼';
+      const box = document.getElementById('raw-json-box');
+      if (!box) return;
+      const isHidden = box.style.display === 'none';
+      box.style.display = isHidden ? 'block' : 'none';
     }
 
     // ==========================================================================
-    // EXPORT & ACTIONS (COPY RESULT, DOWNLOAD JSON, DOWNLOAD REPORT)
+    // EXPORT & ACTIONS (COPY RAW JSON, DOWNLOAD JSON, DOWNLOAD REPORT)
     // ==========================================================================
-    async function copyFullResult() {
+    async function copyRawJson(btnEl) {
       if (!currentResultData) return;
       const str = JSON.stringify(currentResultData, null, 2);
-
-      const copyBtn = document.getElementById('btn-copy-action');
-      const copyLabel = document.getElementById('copy-label-text');
 
       try {
         await navigator.clipboard.writeText(str);
@@ -3416,30 +3664,53 @@
         document.body.removeChild(ta);
       }
 
-      copyBtn.classList.add('copied');
-      copyLabel.textContent = '✓ COPIED';
-      showToast('API output copied to clipboard!');
+      if (btnEl) {
+        const origContent = btnEl.innerHTML;
+        btnEl.innerHTML = '<span>✓</span><span>COPIED!</span>';
+        btnEl.classList.add('copied-glow');
+        setTimeout(() => {
+          btnEl.innerHTML = origContent;
+          btnEl.classList.remove('copied-glow');
+        }, 2200);
+      }
 
-      setTimeout(() => {
-        copyBtn.classList.remove('copied');
-        copyLabel.textContent = 'COPY RESULT';
-      }, 2200);
+      // Sync HUD copy button
+      const hudCopyLabel = document.getElementById('copy-label-text');
+      const hudCopyBtn = document.getElementById('btn-copy-action');
+      if (hudCopyLabel && hudCopyBtn) {
+        hudCopyLabel.textContent = '✓ COPIED';
+        hudCopyBtn.classList.add('copied');
+        setTimeout(() => {
+          hudCopyLabel.textContent = 'COPY RAW JSON';
+          hudCopyBtn.classList.remove('copied');
+        }, 2200);
+      }
+
+      showToast('✓ Raw JSON payload copied to clipboard!');
+    }
+
+    async function copyFullResult() {
+      const btn = document.getElementById('btn-copy-action');
+      await copyRawJson(btn);
     }
 
     function downloadResultJson() {
-      if (!currentResultData) return;
+      if (!currentResultData) {
+        showToast('⚠ No intelligence payload to download');
+        return;
+      }
       const jsonStr = JSON.stringify(currentResultData, null, 2);
       const blob = new Blob([jsonStr], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      const safeQ = (currentQuery || 'query').replace(/[^a-zA-Z0-9]/g, '_');
+      const safeQ = (currentQuery || 'payload').replace(/[^a-zA-Z0-9]/g, '_');
       a.href = url;
       a.download = `rohit_cyber_${currentTool}_${safeQ}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('JSON file downloaded!');
+      showToast('💾 Sanitized JSON file downloaded successfully!');
     }
 
     function downloadIntelReport() {
